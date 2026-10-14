@@ -1,0 +1,16 @@
+[Unit]
+Description=Smart-Filter web console (local UI for the filtering pipeline)
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=@PROJECT_ROOT@
+ExecStart=/usr/bin/python3 simple_server.py
+Restart=on-failure
+RestartSec=3
+# Hardening: the console binds to loopback and only talks to the local pipeline.
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=default.target

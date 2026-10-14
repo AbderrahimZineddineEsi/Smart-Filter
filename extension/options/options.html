@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Smart-Filter &mdash; Settings</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --indigo: #6366f1; --violet: #8b5cf6; --ink: #1f2937;
+            --muted: #6b7280; --line: #e5e7eb; --bg: #f6f7fb;
+        }
+        body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--ink); padding: 28px 18px 70px; }
+        .wrap { max-width: 720px; margin: 0 auto; }
+        header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+        header img { width: 40px; height: 40px; }
+        header h1 { font-size: 24px; }
+        header h1 span { background: linear-gradient(135deg, var(--indigo), var(--violet)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        header p { color: var(--muted); font-size: 13px; margin-top: 2px; }
+        .card { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; margin-bottom: 16px; box-shadow: 0 1px 2px rgba(16,24,40,.04); }
+        .card h2 { font-size: 14px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); margin-bottom: 14px; }
+        .field { margin-bottom: 14px; }
+        .field:last-child { margin-bottom: 0; }
+        label.lbl { display: block; font-weight: 600; font-size: 13px; margin-bottom: 6px; }
+        .help { color: var(--muted); font-size: 12px; margin-top: 5px; line-height: 1.45; }
+        input[type="text"], input[type="password"], select {
+            width: 100%; padding: 9px 11px; border: 1px solid var(--line); border-radius: 9px; font-size: 13px; background: #fff; color: var(--ink);
+        }
+        input:focus, select:focus { outline: 2px solid rgba(99,102,241,.35); border-color: var(--indigo); }
+        .seg { display: inline-flex; background: #f1f2f6; border-radius: 9px; padding: 3px; }
+        .seg button { padding: 7px 16px; border: none; border-radius: 7px; background: transparent; font-size: 13px; font-weight: 600; color: #4b5563; cursor: pointer; }
+        .seg button.active { background: #fff; color: #4f46e5; box-shadow: 0 1px 3px rgba(0,0,0,.12); }
+        .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        .keyRow { display: flex; gap: 8px; }
+        .keyRow input { flex: 1; }
+        .keyRow button { padding: 0 12px; border: 1px solid var(--line); border-radius: 9px; background: #fff; cursor: pointer; font-size: 12px; color: var(--muted); }
+        .providerBox { border: 1px solid var(--line); border-radius: 11px; padding: 14px; margin-top: 12px; }
+        .providerBox.active { border-color: var(--violet); box-shadow: 0 0 0 3px rgba(139,92,246,.12); }
+        .providerHead { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+        .providerHead strong { font-size: 14px; }
+        .pillTag { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px; background: #eef2ff; color: #4338ca; }
+        .toggle { display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 13px; cursor: pointer; }
+        .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; min-height: 4px; }
+        .chip { display: inline-flex; align-items: center; gap: 6px; background: #eef2ff; color: #4338ca; border-radius: 999px; padding: 5px 6px 5px 12px; font-size: 12px; font-weight: 600; max-width: 100%; }
+        .chip span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .chip button { border: none; background: #dbe1ff; color: #4338ca; width: 18px; height: 18px; border-radius: 50%; cursor: pointer; font-size: 12px; line-height: 1; flex: none; }
+        .chip button:hover { background: #c7cffd; }
+        .chipsEmpty { color: var(--muted); font-size: 12px; font-style: italic; }
+        .addRow { display: flex; gap: 8px; }
+        .btn { padding: 9px 16px; border: none; border-radius: 9px; font-weight: 600; font-size: 13px; cursor: pointer; }
+        .btn.primary { background: linear-gradient(135deg, var(--indigo), var(--violet)); color: #fff; }
+        .btn.ghost { background: #fff; border: 1px solid var(--line); color: #374151; }
+        .btn:disabled { opacity: .6; cursor: default; }
+        .result { display: none; margin-top: 12px; padding: 11px 13px; border-radius: 10px; font-size: 13px; line-height: 1.5; white-space: pre-line; }
+        .result.show { display: block; }
+        .result.ALLOWED { background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; }
+        .result.BLOCKED { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+        .result.ERROR { background: #fffbeb; color: #92400e; border: 1px solid #fde68a; }
+        .footer { position: fixed; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,.94); backdrop-filter: blur(6px); border-top: 1px solid var(--line); padding: 12px 18px; display: flex; justify-content: center; gap: 12px; align-items: center; }
+        .saveStatus { font-size: 13px; color: #16a34a; font-weight: 600; min-width: 60px; }
+        .hint { color: var(--muted); font-size: 12px; }
+        code { background: #f1f2f6; padding: 1px 5px; border-radius: 5px; font-size: 12px; }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <header>
+            <img src="../icons/icon128.png" alt="">
+            <div>
+                <h1><span>Smart-Filter</span> Settings</h1>
+                <p>Local AI-powered search filtering. Your keys and policy stay in this browser.</p>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2>General</h2>
+            <div class="field">
+                <label class="toggle"><input type="checkbox" id="enabled" checked> Enable Smart-Filter</label>
+                <p class="help">When disabled, all searches proceed normally.</p>
+            </div>
+            <div class="field">
+                <label class="lbl" for="serviceUrl">Service URL</label>
+                <input type="text" id="serviceUrl" spellcheck="false" placeholder="http://127.0.0.1:8765">
+                <p class="help">Address of the local Smart-Filter service. Must be loopback (127.0.0.1 / localhost).</p>
+            </div>
+            <div class="field">
+                <label class="lbl">Active provider</label>
+                <div class="seg" id="providerSeg">
+                    <button type="button" data-provider="jev">Jev</button>
+                    <button type="button" data-provider="gemini">Gemini</button>
+                </div>
+                <p class="help">Which model evaluates stage 2 (semantic) decisions.</p>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>Providers &amp; API keys</h2>
+            <div class="providerBox" id="boxJev">
+                <div class="providerHead"><strong>Jev</strong><span class="pillTag" id="tagJev">active</span></div>
+                <div class="field">
+                    <label class="lbl" for="keyJev">OpenRouter API key</label>
+                    <div class="keyRow">
+                        <input type="password" id="keyJev" spellcheck="false" placeholder="sk-or-v1-...">
+                        <button type="button" data-reveal="keyJev">show</button>
+                    </div>
+                    <p class="help">The Jev model is served through OpenRouter. Create a key at <code>openrouter.ai/settings/keys</code>.</p>
+                </div>
+                <div class="field">
+                    <label class="lbl" for="modelJev">Model</label>
+                    <input type="text" id="modelJev" spellcheck="false" placeholder="typesafe/jev-1.13">
+                </div>
+            </div>
+            <div class="providerBox" id="boxGemini">
+                <div class="providerHead"><strong>Gemini</strong><span class="pillTag" id="tagGemini">active</span></div>
+                <div class="field">
+                    <label class="lbl" for="keyGemini">API key</label>
+                    <div class="keyRow">
+                        <input type="password" id="keyGemini" spellcheck="false" placeholder="AIza...">
+                        <button type="button" data-reveal="keyGemini">show</button>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="lbl" for="modelGemini">Model</label>
+                    <input type="text" id="modelGemini" spellcheck="false" placeholder="gemini-2.5-flash-lite">
+                </div>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>Blocked topics</h2>
+            <div class="chips" id="chips"></div>
+            <div class="addRow">
+                <input type="text" id="entryInput" placeholder="Type a topic or word and press Enter (e.g. anime)" spellcheck="false">
+                <button class="btn ghost" type="button" id="addEntry">Add</button>
+            </div>
+            <p class="help">
+                Anything you add here is matched by rules/fuzzy matching and sent to the AI as the block policy.
+                Up to <strong>23</strong> topics are used per check, each under 400 characters.
+                An empty list means nothing is blocked.
+            </p>
+        </section>
+
+        <section class="card">
+            <h2>Test a query</h2>
+            <div class="grid2">
+                <div class="field">
+                    <label class="lbl" for="testQuery">Query</label>
+                    <input type="text" id="testQuery" spellcheck="false" placeholder="watch anime online">
+                </div>
+                <div class="field">
+                    <label class="lbl" for="testProvider">Provider</label>
+                    <select id="testProvider">
+                        <option value="jev">Jev</option>
+                        <option value="gemini">Gemini</option>
+                    </select>
+                </div>
+            </div>
+            <div style="display:flex; gap:8px;">
+                <button class="btn primary" type="button" id="testQueryBtn">Check query</button>
+                <button class="btn ghost" type="button" id="testConnBtn">Test connection</button>
+            </div>
+            <div class="result" id="testResult"></div>
+        </section>
+
+        <p class="hint">Tip: start the service with <code>python3 -m smart_filter.service</code> (or the systemd unit <code>smart-filter.service</code>).</p>
+    </div>
+
+    <div class="footer">
+        <span class="saveStatus" id="saveStatus"></span>
+        <button class="btn primary" type="button" id="saveBtn">Save settings</button>
+    </div>
+
+    <script src="../lib/settings.js"></script>
+    <script src="options.js"></script>
+</body>
+</html>

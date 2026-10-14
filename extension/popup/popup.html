@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Smart-Filter</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; width: 320px; padding: 14px; font-size: 13px; color: #1f2937; }
+        .head { display: flex; align-items: center; gap: 9px; margin-bottom: 12px; }
+        .head img { width: 26px; height: 26px; }
+        .head h1 { font-size: 15px; background: linear-gradient(135deg, #6366f1, #8b5cf6); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .head .gear { margin-left: auto; background: none; border: none; cursor: pointer; font-size: 15px; color: #6b7280; padding: 4px; }
+        .head .gear:hover { color: #4f46e5; }
+        .row { display: flex; align-items: center; gap: 8px; margin: 9px 0; }
+        .grow { flex: 1; }
+        label.toggle { display: flex; align-items: center; gap: 7px; font-weight: 600; cursor: pointer; }
+        .seg { display: flex; background: #f1f2f6; border-radius: 8px; padding: 3px; width: 100%; }
+        .seg button { flex: 1; padding: 6px 8px; border: none; border-radius: 6px; background: transparent; font-size: 12px; font-weight: 600; color: #4b5563; cursor: pointer; }
+        .seg button.active { background: #fff; color: #4f46e5; box-shadow: 0 1px 3px rgba(0,0,0,.12); }
+        .status { display: flex; align-items: center; gap: 8px; margin: 10px 0 4px; }
+        .dot { width: 9px; height: 9px; border-radius: 50%; background: #bbb; flex: none; }
+        .dot.ok { background: #22c55e; }
+        .dot.bad { background: #ef4444; }
+        .muted { color: #6b7280; font-size: 12px; }
+        button.primary { padding: 8px 14px; border: none; border-radius: 8px; background: linear-gradient(135deg, #6366f1, #8b5cf6); color: #fff; font-weight: 600; cursor: pointer; font-size: 12px; }
+        button.ghost { padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 8px; background: #fff; color: #374151; font-weight: 600; cursor: pointer; font-size: 12px; }
+        input[type="text"] { width: 100%; padding: 8px 9px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 12px; }
+        .divider { border-top: 1px solid #eee; margin: 12px 0 4px; }
+        .result { display: none; margin-top: 8px; padding: 9px 10px; border-radius: 8px; font-size: 12px; line-height: 1.4; }
+        .result.show { display: block; }
+        .result.ALLOWED { background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; }
+        .result.BLOCKED { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+        .result.ERROR { background: #fffbeb; color: #92400e; border: 1px solid #fde68a; }
+        .warn { color: #b45309; font-size: 11px; margin-top: 6px; }
+        .hint { color: #6b7280; font-size: 11px; line-height: 1.5; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="head">
+        <img src="../icons/icon48.png" alt="">
+        <h1>Smart-Filter</h1>
+        <button class="gear" id="gear" title="Settings">&#9881;</button>
+    </div>
+
+    <div class="row">
+        <label class="toggle"><input type="checkbox" id="enabled" checked> Enabled</label>
+    </div>
+
+    <div class="row">
+        <div class="seg" id="providerSeg">
+            <button type="button" data-provider="jev">Jev</button>
+            <button type="button" data-provider="gemini">Gemini</button>
+        </div>
+    </div>
+    <div class="warn" id="keyWarn" hidden></div>
+
+    <div class="status" id="statusRow">
+        <span class="dot" id="dot"></span>
+        <span class="muted" id="statusText">Checking&hellip;</span>
+    </div>
+    <div class="row">
+        <button class="ghost" type="button" id="testBtn">Test connection</button>
+    </div>
+
+    <div class="divider"></div>
+    <p class="muted" style="margin:8px 0 6px;">Try a search against the selected model:</p>
+    <input type="text" id="query" placeholder="e.g. watch anime online" spellcheck="false">
+    <div class="row">
+        <button class="primary grow" type="button" id="checkBtn">Check query</button>
+    </div>
+    <div class="result" id="result"></div>
+
+    <p class="hint">
+        Queries are classified by your <strong>local Smart-Filter service</strong>
+        using the selected provider. Nothing is filtered inside the browser.
+    </p>
+
+    <script src="../lib/settings.js"></script>
+    <script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+[Unit]
+Description=Smart-Filter classification service (Firefox extension backend)
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=@PROJECT_ROOT@
+ExecStart=/usr/bin/python3 -m smart_filter.service
+Restart=on-failure
+RestartSec=3
+# Hardening: the service only talks to the Jev/Gemini APIs over HTTPS and binds to loopback.
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=default.target

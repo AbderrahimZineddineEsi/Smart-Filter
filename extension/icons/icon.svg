@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128" role="img" aria-label="Smart-Filter">
+  <defs>
+    <linearGradient id="sfGrad" x1="20" y1="10" x2="108" y2="118" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#6366f1"/>
+      <stop offset="0.5" stop-color="#8b5cf6"/>
+      <stop offset="1" stop-color="#7c3aed"/>
+    </linearGradient>
+    <linearGradient id="sfSheen" x1="30" y1="14" x2="70" y2="70" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="sfShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#312e81" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+
+  <path d="M64 9 C40 9 23 14 18 18 C18 62 30 94 64 120 C98 94 110 62 110 18 C105 14 88 9 64 9 Z"
+        fill="url(#sfGrad)" filter="url(#sfShadow)"/>
+  <path d="M64 9 C40 9 23 14 18 18 C18 62 30 94 64 120 C98 94 110 62 110 18 C105 14 88 9 64 9 Z"
+        fill="url(#sfSheen)"/>
+
+  <path d="M42 42 H86 L68 68 V91 H60 V68 Z"
+        fill="#ffffff" fill-opacity="0.96" stroke="#ffffff" stroke-width="3"
+        stroke-linejoin="round" stroke-linecap="round"/>
+</svg>

@@ -1,0 +1,66 @@
+{
+  "manifest_version": 3,
+  "name": "Smart-Filter",
+  "version": "0.4.0",
+  "description": "Blocks search queries that match your blocked topics. Uses the local Smart-Filter service with rule/fuzzy matching plus a chosen AI model (Jev or Gemini) for semantic decisions. Queries are never classified inside this extension.",
+  "permissions": ["webRequest", "webRequestBlocking", "webNavigation", "storage", "tabs"],
+  "host_permissions": ["<all_urls>", "http://127.0.0.1/*", "http://localhost/*"],
+  "web_accessible_resources": [
+    {
+      "resources": ["blocked/blocked.html", "icons/*.png", "icons/*.svg"],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "background": {
+    "scripts": ["lib/sites.js", "lib/settings.js", "lib/service.js", "background.js"]
+  },
+  "action": {
+    "default_title": "Smart-Filter",
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "options_ui": {
+    "page": "options/options.html",
+    "open_in_tab": true
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.google.com/*",
+        "*://*.google.co.uk/*",
+        "*://*.google.ca/*",
+        "*://*.google.com.au/*",
+        "*://*.google.de/*",
+        "*://*.google.fr/*",
+        "*://*.google.es/*",
+        "*://*.google.it/*",
+        "*://*.google.nl/*",
+        "*://*.google.co.in/*",
+        "*://*.google.co.jp/*",
+        "*://*.google.com.br/*",
+        "*://*.google.com.mx/*",
+        "*://*.bing.com/*",
+        "*://*.duckduckgo.com/*",
+        "*://*.youtube.com/*"
+      ],
+      "js": ["content/indicator.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "smart-filter@localhost"
+    }
+  }
+}

@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "smart-filter"
+version = "0.4.0"
+description = "A local two-stage search-query filter: rule/fuzzy matching plus a selectable AI provider (Jev or Gemini) for semantic decisions"
+authors = [{name = "Smart-Filter"}]
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.optional-dependencies]
+dotenv = ["python-dotenv>=1.0"]
+test = ["pytest>=7.0"]
+
+[project.scripts]
+smart-filter-service = "smart_filter.service:main"
+
+[tool.setuptools.packages.find]
+include = ["smart_filter*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test*.py"]
